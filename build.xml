@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Ejemplo" default="default" basedir=".">
+
+    <description>NetBeans Ant project adapted for Docker/Railway</description>
+
+    <!-- 🔥 CLAVE: evitar CopyLibs -->
+    <property name="libs.CopyLibs.classpath" value=""/>
+
+    <!-- IMPORTANTE: override de propiedades para CI/CD -->
+    <property environment="env"/>
+
+    <!-- Import NetBeans generated build -->
+    <import file="nbproject/build-impl.xml"/>
+
+    <!-- ============================= -->
+    <!-- 🔥 OVERRIDE PARA DOCKER BUILD -->
+    <!-- ============================= -->
+
+    <!-- CLEAN + WAR sin CopyLibs -->
+    <target name="docker-clean-war" depends="clean,war">
+        <echo message="Building WAR for Docker..."/>
+    </target>
+
+    <!-- OVERRIDE del WAR (si build-impl lo permite) -->
+    <target name="war" depends="compile" description="Override war for Docker">
+        <mkdir dir="dist"/>
+        <war destfile="dist/ejemplo.war" webxml="web/WEB-INF/web.xml">
+            <fileset dir="build/web"/>
+        </war>
+    </target>
+
+</project>
